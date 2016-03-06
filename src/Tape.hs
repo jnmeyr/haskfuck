@@ -1,6 +1,6 @@
 module Tape (
-  Tape, tape,
-  moveLeft, moveRight,
+  Value, Tape, tape,
+  previousValue, nextValue,
   incrementValue, decrementValue
 ) where
 
@@ -11,18 +11,16 @@ type Tape = ([Value], Value, [Value])
 tape :: Tape
 tape = ([0, 0 ..], 0, [0, 0 ..])
 
-moveLeft :: Tape -> Tape
-moveLeft (l : lefts, value, rights) = (lefts, l, value : rights)
+previousValue :: Tape -> Tape
+previousValue (leftValue : leftValues, value, rightValues) = (leftValues, leftValue, value : rightValues)
+previousValue _ = error "previousValue: this should never happen"
 
-moveRight :: Tape -> Tape
-moveRight (lefts, value, r : rights) = (value : lefts, r, rights)
+nextValue :: Tape -> Tape
+nextValue (leftValues, value, rightValue : rightValues) = (value : leftValues, rightValue, rightValues)
+nextValue _ = error "nextValue: this should never happen"
 
 incrementValue :: Tape -> Tape
-incrementValue (lefts, value, rights) = (lefts, value', rights)
-  where
-    value' = (value + 1) `mod` 256
+incrementValue (leftValues, value, rightValues) = (leftValues, (value + 1) `mod` 256, rightValues)
 
 decrementValue :: Tape -> Tape
-decrementValue (lefts, value, rights) = (lefts, value', rights)
-  where
-    value' = (value + 255) `mod` 256
+decrementValue (leftValues, value, rightValues) = (leftValues, (value + 255) `mod` 256, rightValues)

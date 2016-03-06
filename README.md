@@ -1,6 +1,6 @@
 # Haskfuck #
 
-A [Brainfuck](https://en.wikipedia.org/wiki/Brainfuck) interpreter in Haskell.
+A [Brainfuck](https://en.wikipedia.org/wiki/Brainfuck) interpreter in Haskell using Arrows.
 
 ### Licence ###
 

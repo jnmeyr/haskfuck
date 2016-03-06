@@ -4,8 +4,12 @@ module Input (
 
 import Prelude hiding (read)
 
+import Data.Char (ord)
+
+import Tape (Value)
+
 type Input = String
 
-read :: Input -> Maybe (Char, Input)
-read [] = Nothing
-read (c : cs) = Just (c, cs)
+read :: Input -> (Value, Input)
+read [] = (0, [])
+read (character : characters) = (ord character, characters)

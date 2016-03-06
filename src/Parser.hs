@@ -4,14 +4,14 @@ module Parser (
 
 import Prelude hiding (Left, Right)
 
-import qualified Data.Maybe as Maybe (isJust, mapMaybe, listToMaybe)
+import Data.Maybe (isJust, fromJust)
 
-import Types (Source, Statement(..), Code)
+import Code (Statement(..), Code)
 
 parseStatement :: Char -> Maybe Statement
 parseStatement c = case c of
-  '<' -> Just Left
-  '>' -> Just Right
+  '<' -> Just Previous
+  '>' -> Just Next
   '+' -> Just Increment
   '-' -> Just Decrement
   '.' -> Just Show
@@ -20,9 +20,14 @@ parseStatement c = case c of
   ']' -> Just Close
   _ -> Nothing
 
-parse :: Source -> Code
-parse source = ([], statement, statements')
+parseStatements :: String -> (Maybe Statement, [Statement])
+parseStatements = uncons . map fromJust . filter isJust . map parseStatement
   where
-    statements = Maybe.mapMaybe parseStatement source
-    statement = Maybe.listToMaybe statements
-    statements' = if Maybe.isJust statement then tail statements else []
+    uncons :: [a] -> (Maybe a, [a])
+    uncons [] = (Nothing, [])
+    uncons (x : xs) = (Just x, xs)
+
+parse :: String -> Code
+parse source = ([], statement, nextStatements)
+  where
+    (statement, nextStatements) = parseStatements source

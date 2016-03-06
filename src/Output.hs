@@ -1,9 +1,16 @@
 module Output (
-  Output,
+  Output, output,
   write
 ) where
 
+import Data.Char (chr)
+
+import Tape (Value)
+
 type Output = String
 
-write :: Char -> Output -> Output
-write char output = output ++ [char]
+output :: String
+output = ""
+
+write :: Value -> Output -> Output
+write value output = output ++ [chr value]

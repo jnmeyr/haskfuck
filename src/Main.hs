@@ -2,13 +2,18 @@ module Main (
   main
 ) where
 
-import Data.Foldable (forM_)
+import System.Environment (getArgs)
 
-import Types (Source, Statement(..), Code)
+import Parser (parse)
 import Interpreter (interpret)
 
-demo :: String
-demo = "++++++++++\n[\n >+++++++>++++++++++>+++>+<<<<-\n]\n>++.\n>+.\n+++++++.\n.\n+++.\n>++.\n<<+++++++++++++++.\n>.\n+++.\n------.\n--------.\n>+.\n>.\n+++.\n"
+helloWorld :: (String, String)
+helloWorld = ("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.+++.", "")
 
 main :: IO ()
-main = forM_ (interpret demo "") putStrLn
+main = do
+  args <- getArgs
+  let (source, input) | length args == 2 = (args !! 0, args !! 1)
+                      | length args == 1 = (args !! 0, "")
+                      | otherwise        = helloWorld
+  putStrLn $ interpret (parse source) input
